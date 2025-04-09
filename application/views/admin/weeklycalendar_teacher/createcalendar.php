@@ -141,6 +141,7 @@
         }
     }
 </style>
+
 <link rel="stylesheet" href="<?php echo base_url(); ?>backend/bootstrap/css/bootstrap-multiselect.css" />
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/bootstrap/js/bootstrap-multiselect.js"></script>
 <div class="content-wrapper" style="/* [disabled]min-height: 946px; */">
@@ -1030,6 +1031,7 @@
                                                                     <td>
                                                                         <?php foreach (['Present', 'Absent'] as $radiokey => $radiovalue) {
 
+
                                                                         ?>
                                                                             <div class="radio radio-info radio-inline">
                                                                                 <input <?php if ($radiokey == 0) {
@@ -1038,7 +1040,7 @@
                                                                                     type="radio"
                                                                                     id="attendencetype<?php echo "$count-$radiokey"; ?>"
                                                                                     value="<?php echo $radiokey ?>"
-                                                                                    name="attendencetype[<?php echo $count; ?>]">
+                                                                                    name="attendencetype[<?php echo $count; ?>]" class="<?php echo $radiovalue ?>" data-student_name="<?php echo $value['firstname'] . ' ' . $value['lastname']; ?>">
                                                                                 <label
                                                                                     for="attendencetype<?php echo "$count-$radiokey"; ?>">
                                                                                     <?php echo $radiovalue ?>
@@ -1292,29 +1294,71 @@
     })
 
     $(document).on('click', '.save-attendance', function(e) {
-        e.preventDefault()
-        var form = $('#attendance-form')[0]
+
+        let absentStudents = [];
+
+        $('.Absent:checked').each(function() {
+            let studentName = $(this).data('student_name');
+            absentStudents.push(studentName);
+        });
+        if (absentStudents.length) {
+
+            if (confirm(absentStudents) == true) {
+                $(".save-attendance ").attr("disabled", true);
+                e.preventDefault()
+                var form = $('#attendance-form')[0]
 
 
-        let formdata = new FormData(form)
+                let formdata = new FormData(form)
 
-        formdata.append('period', $(this).data('period'))
-        formdata.append('subject', $(this).data('subject'))
-        formdata.append('topic', $(this).data('topic'))
-        formdata.append('date', $(this).data('date'))
-        formdata.append('isupdate', $(this).data('isupdate'))
+                formdata.append('period', $(this).data('period'))
+                formdata.append('subject', $(this).data('subject'))
+                formdata.append('topic', $(this).data('topic'))
+                formdata.append('date', $(this).data('date'))
+                formdata.append('isupdate', $(this).data('isupdate'))
 
-        var base_url = '<?php echo base_url() ?>';
-        $.ajax({
-            type: 'POST',
-            url: base_url + "admin/weeklycalendarteacher/saveattendance",
-            data: formdata,
-            processData: false,
-            contentType: false,
-            success: function(data) {
-                $('#AttendanceModal').modal('hide')
+                var base_url = '<?php echo base_url() ?>';
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "admin/weeklycalendarteacher/saveattendance",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        $('#AttendanceModal').modal('hide')
+                        $(".save-attendance ").removeAttr("disabled");
+                    }
+                })
+            } else {
+                $(".save-attendance ").attr("disabled", true);
+                e.preventDefault()
+                var form = $('#attendance-form')[0]
+
+
+                let formdata = new FormData(form)
+
+                formdata.append('period', $(this).data('period'))
+                formdata.append('subject', $(this).data('subject'))
+                formdata.append('topic', $(this).data('topic'))
+                formdata.append('date', $(this).data('date'))
+                formdata.append('isupdate', $(this).data('isupdate'))
+
+                var base_url = '<?php echo base_url() ?>';
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "admin/weeklycalendarteacher/saveattendance",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        $('#AttendanceModal').modal('hide')
+                        $(".save-attendance ").removeAttr("disabled");
+                    }
+                })
             }
-        })
+        }
+
+
 
 
 
@@ -1964,7 +2008,7 @@
 
 
             options = $('.period_dropdown option')
-            
+
             let date = '';
 
             $.ajax({
@@ -2161,7 +2205,7 @@
 
 
 
-        function  getPeriods(periods) {
+        function getPeriods(periods) {
 
 
             nonteachingperiods = []
