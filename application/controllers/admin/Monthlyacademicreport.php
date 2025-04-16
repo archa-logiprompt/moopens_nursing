@@ -671,6 +671,8 @@ class Monthlyacademicreport extends Admin_Controller
                 ->result_array();
                 
                 
+                
+                
 
             $total_cm = $this->db->select('actual')
                 ->from('student_period_attendance')
@@ -684,7 +686,7 @@ class Monthlyacademicreport extends Admin_Controller
                 ->get()
                 ->result_array();
                 
-                // echo $this->db->last_query();exit;
+               
 
 
 
@@ -715,7 +717,7 @@ class Monthlyacademicreport extends Admin_Controller
 
                 
 
-
+//  echo $this->db->last_query();exit;
 
 
 

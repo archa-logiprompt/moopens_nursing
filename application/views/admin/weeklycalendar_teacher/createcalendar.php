@@ -1301,7 +1301,7 @@
             let studentName = $(this).data('student_name');
             absentStudents.push(studentName);
         });
-        if (absentStudents.length > 0) {
+        if (absentStudents.length) {
 
             if (confirm(absentStudents) == true) {
                 $(".save-attendance ").attr("disabled", true);
@@ -1330,35 +1330,34 @@
                     }
                 })
             }
-        } else {
-            console.log("here1")
-            $(".save-attendance ").attr("disabled", true);
-            e.preventDefault()
-            var form = $('#attendance-form')[0]
-
-
-            let formdata = new FormData(form)
-
-            formdata.append('period', $(this).data('period'))
-            formdata.append('subject', $(this).data('subject'))
-            formdata.append('topic', $(this).data('topic'))
-            formdata.append('date', $(this).data('date'))
-            formdata.append('isupdate', $(this).data('isupdate'))
-
-            var base_url = '<?php echo base_url() ?>';
-            $.ajax({
-                type: 'POST',
-                url: base_url + "admin/weeklycalendarteacher/saveattendance",
-                data: formdata,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    $('#AttendanceModal').modal('hide')
-                    $(".save-attendance ").removeAttr("disabled");
-                }
-            })
         }
+ else {
+                $(".save-attendance ").attr("disabled", true);
+                e.preventDefault()
+                var form = $('#attendance-form')[0]
 
+
+                let formdata = new FormData(form)
+
+                formdata.append('period', $(this).data('period'))
+                formdata.append('subject', $(this).data('subject'))
+                formdata.append('topic', $(this).data('topic'))
+                formdata.append('date', $(this).data('date'))
+                formdata.append('isupdate', $(this).data('isupdate'))
+
+                var base_url = '<?php echo base_url() ?>';
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "admin/weeklycalendarteacher/saveattendance",
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        $('#AttendanceModal').modal('hide')
+                        $(".save-attendance ").removeAttr("disabled");
+                    }
+                })
+            }
 
 
 
